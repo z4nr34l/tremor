@@ -20,6 +20,8 @@ export type VerticalPosition = "top" | "bottom";
 
 export type Importance = "primary" | "secondary";
 
+export type ButtonVariant = "primary" | "secondary" | "light";
+
 export type RelativeFilterOption = "tdy" | "w" | "t" | "m" | "y" | null;
 
 const deltaTypeValues = [

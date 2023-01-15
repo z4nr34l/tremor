@@ -1,3 +1,8 @@
+/**
+ * NOTE: The ButtonInline component is deprecated and will be removed in the next major release.
+ * Please refer to the variant="light" property of the Button component instead.
+ */
+
 import React from "react";
 
 import {
@@ -24,7 +29,7 @@ import { Transition } from "react-transition-group";
 
 export interface ButtonInlineProps {
   type?: ButtonType;
-  text: string;
+  text?: string;
   value?: any;
   icon?: React.ElementType;
   iconPosition?: HorizontalPosition;
@@ -38,6 +43,7 @@ export interface ButtonInlineProps {
   disabled?: boolean;
   loading?: boolean;
   loadingText?: string;
+  children?: React.ReactNode;
 }
 
 const ButtonInline = ({
@@ -56,11 +62,15 @@ const ButtonInline = ({
   disabled = false,
   loading = false,
   loadingText,
+  children,
 }: ButtonInlineProps) => {
+  console.warn(
+    "DeprecationWarning: The `ButtonInline` component is deprecated and will be removed in the next major release. Please use `<Button variant='light'>` instead."
+  );
+
   if (handleClick) {
     console.warn(
-      "DeprecationWarning: The `handleClick` property is deprecated and will be removed \
-            in the next major release. Please use `onClick` instead."
+      "DeprecationWarning: The `handleClick` property is deprecated and will be removed in the next major release. Please use `onClick` instead."
     );
   }
 
@@ -123,7 +133,7 @@ const ButtonInline = ({
             ) : null}
             {
               <p className="text-elem tr-whitespace-nowrap">
-                {showLoadingText ? loadingText : text}
+                {showLoadingText ? loadingText : !children ? text : children}
               </p>
             }
             {showButtonIconOrSpinner &&
