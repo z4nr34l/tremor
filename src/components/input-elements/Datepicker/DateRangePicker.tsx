@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { startOfDay, startOfToday } from "date-fns";
+import { startOfToday } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 import {
   BaseColorContext,
@@ -14,14 +15,18 @@ import { BaseColors, classNames, parseMarginTop, parseMaxWidth } from "lib";
 import { Color, MarginTop, MaxWidth } from "../../../lib/inputTypes";
 import {
   defaultOptions,
-  getEndDate,
-  getStartDate,
+  getEndDateByDropdownValue,
+  getStartDateByDropdownValue,
+  parseEndDate,
+  parseStartDate,
 } from "./dateRangePickerUtils";
 
 import Calendar from "./Calendar";
 import DateRangePickerButton from "./DateRangePickerButton";
 import { DropdownItem } from "components/input-elements/Dropdown";
 import Modal from "components/layout-elements/Modal";
+
+export type Locale = typeof enUS;
 
 export type DateRangePickerValue = [
   (Date | null)?,
@@ -32,6 +37,7 @@ export type DateRangePickerOption = {
   value: string;
   text: string;
   startDate: Date;
+  endDate?: Date;
 };
 
 export interface DateRangePickerProps {
@@ -43,10 +49,12 @@ export interface DateRangePickerProps {
   minDate?: Date | null;
   maxDate?: Date | null;
   placeholder?: string;
+  dropdownPlaceholder?: string;
   enableYearPagination?: boolean;
   color?: Color;
   marginTop?: MarginTop;
   maxWidth?: MaxWidth;
+  locale?: Locale;
 }
 
 const DateRangePicker = ({
@@ -57,11 +65,13 @@ const DateRangePicker = ({
   options,
   minDate = null,
   maxDate = null,
-  placeholder = "Select...",
+  placeholder = "Select",
+  dropdownPlaceholder = "Select",
   color = BaseColors.Blue,
   marginTop = "mt-0",
   maxWidth = "max-w-none",
   enableYearPagination = false,
+  locale = enUS,
 }: DateRangePickerProps) => {
   const TODAY = startOfToday();
   const calendarRef = useRef(null);
@@ -71,6 +81,7 @@ const DateRangePicker = ({
     defaultValue,
     value
   );
+
   const [anchorDate, setAnchorDate] = useState(TODAY);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -78,7 +89,7 @@ const DateRangePicker = ({
   const dropdownOptions = options ?? defaultOptions;
   const selectedDropdownValue = selectedValue ? selectedValue[2] ?? null : null;
   const selectedStartDate = selectedValue
-    ? getStartDate(
+    ? parseStartDate(
         selectedValue[0],
         minDate,
         selectedDropdownValue,
@@ -86,7 +97,12 @@ const DateRangePicker = ({
       )
     : null;
   const selectedEndDate = selectedValue
-    ? getEndDate(selectedValue[1], maxDate, selectedDropdownValue)
+    ? parseEndDate(
+        selectedValue[1],
+        maxDate,
+        selectedDropdownValue,
+        dropdownOptions
+      )
     : null;
 
   const handleDateClick = (date: Date) => {
@@ -117,17 +133,18 @@ const DateRangePicker = ({
   };
 
   const handleDropdownOptionClick = (dropdownValue: string) => {
-    let selectedStartDate =
-      dropdownOptions.find(
-        (option: DateRangePickerOption) => option.value === dropdownValue
-      )?.startDate ?? null;
-    selectedStartDate = selectedStartDate
-      ? startOfDay(selectedStartDate)
-      : null;
+    const selectedStartDate = getStartDateByDropdownValue(
+      dropdownValue,
+      dropdownOptions
+    );
+    const selectedEndDate = getEndDateByDropdownValue(
+      dropdownValue,
+      dropdownOptions
+    );
 
-    setSelectedValue([selectedStartDate, TODAY, dropdownValue]);
-    onValueChange?.([selectedStartDate, TODAY, dropdownValue]);
-    setAnchorDate(TODAY);
+    setSelectedValue([selectedStartDate, selectedEndDate, dropdownValue]);
+    onValueChange?.([selectedStartDate, selectedEndDate, dropdownValue]);
+    setAnchorDate(selectedEndDate);
     setShowDropdown(false);
   };
 
@@ -165,6 +182,8 @@ const DateRangePicker = ({
           showDropdown={showDropdown}
           setShowDropdown={setShowDropdown}
           onDropdownKeyDown={handleDropdownKeyDown}
+          locale={locale}
+          dropdownPlaceholder={dropdownPlaceholder}
         />
         {/* Calendar Modal */}
         <Modal
@@ -183,6 +202,7 @@ const DateRangePicker = ({
             minDate={minDate}
             maxDate={maxDate}
             onDateClick={handleDateClick}
+            locale={locale}
           />
         </Modal>
         {/* Dropdpown Modal */}

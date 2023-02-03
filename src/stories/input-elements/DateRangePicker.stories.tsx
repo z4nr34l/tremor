@@ -11,7 +11,7 @@ import {
   Title,
 } from "components";
 import { dateRangePickerData } from "stories/input-elements/helpers/testData";
-
+import { fr } from "date-fns/locale";
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "Tremor/InputElements/DateRangePicker",
@@ -26,11 +26,7 @@ const UncontrolledTemplate: ComponentStory<typeof DateRangePicker> = (args) => {
 
   return (
     <Card>
-      <DateRangePicker
-        {...args}
-        // defaultValue={ value}
-        onValueChange={(value) => setValue(value)}
-      />
+      <DateRangePicker {...args} onValueChange={(value) => setValue(value)} />
       <Title>Filtered Data</Title>
       <Text>StartDate: {String(startDate)} </Text>
       <Text>EndDate: {String(endDate)} </Text>
@@ -44,7 +40,7 @@ const UncontrolledTemplate: ComponentStory<typeof DateRangePicker> = (args) => {
               datapoint.date <= endDate
           )
           .map((datapoint) => (
-            <p>{String(datapoint.date)}</p>
+            <p key={String(datapoint.date)}>{String(datapoint.date)}</p>
           ))}
       </div>
     </Card>
@@ -52,7 +48,7 @@ const UncontrolledTemplate: ComponentStory<typeof DateRangePicker> = (args) => {
 };
 
 const ControlledTemplate: ComponentStory<typeof DateRangePicker> = (args) => {
-  const [value, setValue] = useState<DateRangePickerValue>([null, null]);
+  const [value, setValue] = useState<DateRangePickerValue>(args.value!);
 
   const startDate = value[0];
   const endDate = value[1];
@@ -89,7 +85,7 @@ const ControlledTemplate: ComponentStory<typeof DateRangePicker> = (args) => {
               datapoint.date <= endDate
           )
           .map((datapoint) => (
-            <p>{String(datapoint.date)}</p>
+            <p key={String(datapoint.date)}>{String(datapoint.date)}</p>
           ))}
       </div>
     </Card>
@@ -103,16 +99,60 @@ UncontrolledWithDefaultDateRange.args = {
   defaultValue: [new Date(2022, 10, 1), new Date()],
 };
 
+export const UncontrolledWithDefaultFrLocale = UncontrolledTemplate.bind({});
+UncontrolledWithDefaultFrLocale.args = {
+  locale: fr,
+  dropdownPlaceholder: "Sélectionnez",
+  placeholder: "Sélectionnez...",
+};
+
 export const UncontrolledWithDefaultSelectOption = UncontrolledTemplate.bind(
   {}
 );
 UncontrolledWithDefaultSelectOption.args = {
-  defaultValue: [undefined, undefined, "t"],
+  defaultValue: [undefined, undefined, "tdy"],
 };
 
 export const UncontrolledWithDefaultValue = UncontrolledTemplate.bind({});
 UncontrolledWithDefaultValue.args = {
-  defaultValue: [new Date(2022, 10, 1), new Date(), "t"],
+  defaultValue: [new Date(2022, 10, 1), new Date()],
+};
+
+export const UncontrolledWithDropdownOptions = UncontrolledTemplate.bind({});
+UncontrolledWithDropdownOptions.args = {
+  defaultValue: [new Date(2022, 10, 1), new Date(), "tdy"],
+  options: [
+    {
+      value: "tdy",
+      text: "tdy",
+      startDate: new Date(2022, 11, 1),
+    },
+    {
+      value: "a",
+      text: "a",
+      startDate: new Date(2023, 0, 1),
+    },
+  ],
+};
+
+export const UncontrolledWithDropdownOptionsWithEndDate =
+  UncontrolledTemplate.bind({});
+UncontrolledWithDropdownOptionsWithEndDate.args = {
+  defaultValue: [new Date(2022, 10, 1), new Date(), "tdy"],
+  options: [
+    {
+      value: "tdy",
+      text: "tdy",
+      startDate: new Date(2022, 11, 1),
+      endDate: new Date(2022, 11, 30),
+    },
+    {
+      value: "a",
+      text: "a",
+      startDate: new Date(2023, 0, 1),
+      endDate: new Date(2023, 0, 30),
+    },
+  ],
 };
 
 export const ControlledDefault = ControlledTemplate.bind({});
@@ -130,4 +170,42 @@ ControlledWithDefaultSelectOption.args = {
 export const ControlledWithDefaultValue = ControlledTemplate.bind({});
 ControlledWithDefaultValue.args = {
   value: [new Date(2022, 10, 1), new Date(), "t"],
+};
+
+export const ControlledWithDropdownOptions = ControlledTemplate.bind({});
+ControlledWithDropdownOptions.args = {
+  value: [new Date(2022, 10, 1), new Date(), "tdy"],
+  options: [
+    {
+      value: "tdy",
+      text: "tdy",
+      startDate: new Date(2022, 11, 1),
+    },
+    {
+      value: "a",
+      text: "a",
+      startDate: new Date(2023, 0, 1),
+    },
+  ],
+};
+
+export const ControlledWithDropdownOptionsWithEndDate = ControlledTemplate.bind(
+  {}
+);
+ControlledWithDropdownOptionsWithEndDate.args = {
+  value: [new Date(2022, 5, 1), new Date(), "tdy"],
+  options: [
+    {
+      value: "tdy",
+      text: "tdy",
+      startDate: new Date(2022, 11, 1),
+      endDate: new Date(2022, 11, 30),
+    },
+    {
+      value: "a",
+      text: "a",
+      startDate: new Date(2023, 0, 1),
+      endDate: new Date(2023, 0, 30),
+    },
+  ],
 };

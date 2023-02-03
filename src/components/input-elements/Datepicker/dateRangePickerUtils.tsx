@@ -5,11 +5,14 @@ import {
   getDayTextClassNames,
 } from "./datepickerUtils";
 import {
+  addDays,
+  format,
   max,
   min,
   startOfDay,
   startOfMonth,
   startOfToday,
+  startOfWeek,
   startOfYear,
   sub,
 } from "date-fns";
@@ -17,29 +20,63 @@ import { Color } from "../../../lib/inputTypes";
 import { DateRangePickerOption } from "./DateRangePicker";
 import { classNames } from "lib";
 
-export const getStartDate = (
+export const getWeekdays = (locale: Locale) => {
+  const firstDayOfWeek = startOfWeek(new Date());
+  return Array.from(Array(7)).map((e, i) =>
+    format(addDays(firstDayOfWeek, i), "EEEEEE", { locale })
+  );
+};
+
+export const capitalize = (s: string, locale: Locale) => {
+  return s.charAt(0).toLocaleUpperCase(locale.code) + s.substring(1);
+};
+
+export const getStartDateByDropdownValue = (
+  dropdownValue: string | null | undefined,
+  dropdownOptions: DateRangePickerOption[]
+) => {
+  const startDate =
+    dropdownOptions.find(
+      (option: DateRangePickerOption) => option.value === dropdownValue
+    )?.startDate ?? null;
+  return startDate ? startOfDay(startDate) : null;
+};
+
+export const getEndDateByDropdownValue = (
+  dropdownValue: string | null | undefined,
+  dropdownOptions: DateRangePickerOption[]
+) =>
+  startOfDay(
+    dropdownOptions.find(
+      (option: DateRangePickerOption) => option.value === dropdownValue
+    )?.endDate ?? startOfToday()
+  );
+
+export const parseStartDate = (
   startDate: Date | null | undefined,
   minDate: Date | null | undefined,
   selectedDropdownValue: string | null | undefined,
   dropdownOptions: DateRangePickerOption[]
 ) => {
   if (selectedDropdownValue) {
-    startDate = dropdownOptions.find(
-      (option) => option.value === selectedDropdownValue
-    )?.startDate;
+    startDate = getStartDateByDropdownValue(
+      selectedDropdownValue,
+      dropdownOptions
+    );
   }
   if (!startDate) return null;
   if (startDate && !minDate) return startOfDay(startDate);
   return startOfDay(max([startDate as Date, minDate as Date]));
 };
 
-export const getEndDate = (
+export const parseEndDate = (
   endDate: Date | null | undefined,
   maxDate: Date | null | undefined,
-  selectedDropdownValue: string | null | undefined
+  selectedDropdownValue: string | null | undefined,
+  dropdownOptions: DateRangePickerOption[]
 ) => {
   if (selectedDropdownValue) {
-    endDate = startOfToday();
+    endDate = getEndDateByDropdownValue(selectedDropdownValue, dropdownOptions);
   }
   if (!endDate) return null;
   if (endDate && !maxDate) return startOfDay(endDate);
