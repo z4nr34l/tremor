@@ -22,7 +22,7 @@
     </a>
   </div>
   <h3 align="center">
-    <a href="https://www.tremor.so/docs/getting-started/introduction">Documentation</a> &bull;
+    <a href="https://www.tremor.so/docs/getting-started/installation">Documentation</a> &bull;
     <a href="https://demo.tremor.so/">Demo Dashboard</a> &bull;
     <a href="https://www.tremor.so">Website</a>
   </h3>
