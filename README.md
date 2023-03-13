@@ -55,10 +55,9 @@ For new projects, we recommend using Next.js, as it also provides a simple deplo
 In your terminal, we create a new Next project:
 
 ```bash
-npx create-next-app my-project --typescript
+npx create-next-app my-project --typescript 
 cd my-project
 ```
-*Using the `--typescript` option is optional here.*
 
 <br>
 
@@ -70,19 +69,50 @@ npm install @tremor/react
 
 <br>
 
-Import the tremor stylesheet into the `_app.js` / `_app.tsx`  file:
+Install Tailwind CSS and its peer dependencies
 
 ```bash
-import '@tremor/react/dist/esm/tremor.css'
+npm install -D tailwindcss postcss autoprefixer 
+npx tailwindcss init -p
 ```
-*Note, if you are importing other CSS files along with `tremor.css`, make sure to add the above import statement as the last one, in order to avoid unintentional CSS conflicts.*
 <br>
 
-Finally, run the dev server
+Add the paths to all of your template files in your `tailwind.config.js` file.
+
+```diff
+/** @type {import('tailwindcss').Config} */
+
+module.exports = {
+    content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
++   './node_modules/@tremor/**/*.{js,ts,jsx,tsx}',
+    
+    // Or if using src directory:
+    "./src/**/*.{js,ts,jsx,tsx}",
+    ],
+    theme: {
+    extend: {},
+    },
+    plugins: [],
+}
+```
+
+Add the `@tailwind` directives for each Tailwind's layers to your `globals.css` file.
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+Start the dev server
 
 ```bash
 npm run dev
 ```
+
 **⚠️ Note:** Since we have not fully migrated to Next.js 13 yet, if you are using the `app` directory introduced in Next.js 13, wrap your tremor components in another component by using the `"use client"` directive. More infos on the directive and the usage of third-party libraries in Next.js 13 can be found in the [Next.js docs](https://beta.nextjs.org/docs/rendering/server-and-client-components#third-party-packages).
 
 If you get the following error while using the `app` directory: `TypeError: Super expression must either be null or a function`, then add the [`serverComponentsExternalPackages`](https://beta.nextjs.org/docs/api-reference/next.config.js#servercomponentsexternalpackages) to your `next.config.js`.
