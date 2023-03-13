@@ -47,6 +47,7 @@
 
 You can use tremor either within a [React](https://reactjs.org/) or [Next.js](https://nextjs.org) Project.
 For new projects, we recommend using Next.js, as it also provides a simple deployment workflow through the [Vercel](https://vercel.com/docs) platform.
+For other Frameworks, see our [Installation Guide](https://www.tremor.so/docs/getting-started/installation).
 
 <br>
 
@@ -125,42 +126,6 @@ const nextConfig = {
   },
 }
 ```
-
-<br>
-
-## Using Create React App
-
-In your terminal, we create a new React project:
-
-```bash
-npx create-react-app my-project --template typescript
-cd my-project
-```
-*Using the `--template typescript` option is optional here.*
-
-<br>
-
-Install tremor from your command line via npm.
-
-```bash
-npm install @tremor/react
-```
-
-<br>
-
-Import the tremor stylesheet into the `App.js` / `App.tsx`  file:
-```tsx
-import '@tremor/react/dist/esm/tremor.css';
-```
-*Note, if you are importing other CSS files along with `tremor.css`, make sure to add the above import statement as the last one, in order to avoid unintentional CSS conflicts.*
-
-<br>
-
-Finally, run the dev server.
-```bash
-npm start
-```
-
 <br>
 <br>
 
