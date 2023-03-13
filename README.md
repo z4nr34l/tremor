@@ -144,14 +144,14 @@ With tremor creating an analytical interface is easy.
 //Card.tsx
 import { Card, Text, Metric, Flex, ProgressBar } from "@tremor/react";
 export default () => (
-  <Card maxWidth="max-w-sm">
+  <Card className="max-w-sm">
     <Text>Sales</Text>
     <Metric>$ 71,465</Metric>
-    <Flex marginTop='mt-4'>
+    <Flex className='mt-4'>
         <Text>32% of annual target</Text>
         <Text>$ 225,000</Text>
     </Flex>
-    <ProgressBar percentageValue={ 32 } marginTop="mt-2" />
+    <ProgressBar percentageValue={ 32 } className="mt-2" />
   </Card>
 );
 ```
@@ -171,4 +171,4 @@ We are always looking for new ideas or other ways to improve tremor. If you have
 
 [Apache License 2.0](https://github.com/tremorlabs/tremor/blob/main/License)
 
-Copyright &copy;  2022 Tremor. All rights reserved.
+Copyright &copy;  2023 Tremor. All rights reserved.
