@@ -16,10 +16,15 @@ import BaseChartProps from "../common/BaseChartProps";
 import ChartLegend from "components/chart-elements/common/ChartLegend";
 import ChartTooltip from "../common/ChartTooltip";
 
-import { BaseColors, defaultValueFormatter, hexColors, themeColorRange } from "lib";
+import { BaseColors, CurveType, defaultValueFormatter, hexColors, themeColorRange } from "lib";
 import { AxisDomain } from "recharts/types/util/types";
 
-const LineChart = React.forwardRef<HTMLDivElement, BaseChartProps>((props, ref) => {
+export interface LineChartProps extends BaseChartProps {
+  curveType?: CurveType;
+  connectNulls?: boolean;
+}
+
+const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>((props, ref) => {
   const {
     data = [],
     categories = [],
@@ -35,8 +40,10 @@ const LineChart = React.forwardRef<HTMLDivElement, BaseChartProps>((props, ref) 
     showLegend = true,
     showGridLines = true,
     autoMinValue = false,
+    curveType = "linear",
     minValue,
     maxValue,
+    connectNulls = false,
     className,
     ...other
   } = props;
@@ -110,12 +117,13 @@ const LineChart = React.forwardRef<HTMLDivElement, BaseChartProps>((props, ref) 
             <Line
               key={category}
               name={category}
-              type="linear"
+              type={curveType}
               dataKey={category}
               stroke={hexColors[categoryColors.get(category) ?? BaseColors.Gray]}
               strokeWidth={2}
               dot={false}
               isAnimationActive={showAnimation}
+              connectNulls={connectNulls}
             />
           ))}
         </ReChartsLineChart>

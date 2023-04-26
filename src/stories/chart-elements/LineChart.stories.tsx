@@ -3,7 +3,7 @@ import React from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
 import { Card, LineChart, Title } from "components";
-import { simpleBaseChartData as data } from "./helpers/testData";
+import { simpleBaseChartData as data, simpleBaseChartDataWithNulls } from "./helpers/testData";
 import { valueFormatter } from "stories/chart-elements/helpers/utils";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -134,5 +134,25 @@ WithNoCategories.args = {
 export const WithNoDataKey = DefaultTemplate.bind({});
 WithNoDataKey.args = {
   data: data,
+  categories: ["Sales", "Successful Payments"],
+};
+
+export const WithCurveTypeNatural = DefaultTemplate.bind({});
+WithCurveTypeNatural.args = {
+  data: data,
+  categories: ["Sales", "Successful Payments"],
+  curveType: "natural",
+};
+
+export const WithConnectNullsTrue = DefaultTemplate.bind({});
+WithConnectNullsTrue.args = {
+  data: simpleBaseChartDataWithNulls,
+  connectNulls: true,
+  categories: ["Sales", "Successful Payments"],
+};
+
+export const WithConnectNullsFalse = DefaultTemplate.bind({});
+WithConnectNullsFalse.args = {
+  data: simpleBaseChartDataWithNulls,
   categories: ["Sales", "Successful Payments"],
 };
